@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:background="#ffffffff"  
+    android:orientation="vertical" >  
+  
+<RelativeLayout  
+        android:layout_width="fill_parent"  
+        android:layout_height="48.0dip"  
+        android:background="@drawable/titlebar_center_repeat" >  
+  
+           <Button
+             android:id="@+id/quit"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+             android:layout_alignParentTop="true"
+             android:layout_marginLeft="18dp"
+             android:ellipsize="end"
+             android:gravity="left"
+             android:singleLine="true"
+             android:text="取消"
+             android:textColor="#ffffffff"
+             android:textSize="18.0dip"
+             android:textStyle="bold"/>
+            <Button
+             android:id="@+id/reback"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             android:layout_marginRight="18dp"
+             android:ellipsize="end"
+             android:gravity="right"
+             android:singleLine="true"
+             android:text="返回"
+             android:textColor="#ffffffff"
+             android:textSize="18.0dip"
+             android:textStyle="bold" />
+    </RelativeLayout>  
+    <ScrollView  
+        android:layout_width="fill_parent"  
+        android:layout_height="fill_parent" >  
+  
+        <LinearLayout  
+            android:layout_width="fill_parent"  
+            android:layout_height="fill_parent"  
+            android:orientation="vertical"  
+            android:padding="10.0dip" >  
+  
+            <LinearLayout  
+                android:layout_width="fill_parent"  
+                android:layout_height="wrap_content"  
+                android:gravity="center"  
+                android:orientation="horizontal" >  
+  
+                <TextView  
+                    android:layout_width="65.0dip"  
+                    android:layout_height="wrap_content"  
+                    android:layout_marginRight="5.0dip"  
+                    android:text="@string/login_name"  
+                    android:textColor="#ff404040"  
+                    android:textSize="16.0dip" />  
+  
+                <RelativeLayout  
+                    android:layout_width="wrap_content"  
+                    android:layout_height="40.0dip" >  
+  
+                    <EditText  
+                        android:id="@+id/user_name_edit"  
+                        android:layout_width="fill_parent"  
+                        android:layout_height="fill_parent"  
+                        android:hint="请输入注册名"  
+                        android:imeOptions="actionNext"  
+                        android:maxLength="20"  
+                        android:paddingLeft="10.0dip"  
+                        android:singleLine="true"  
+                        android:textSize="16.0dip" />    
+                </RelativeLayout>  
+            </LinearLayout>  
+  
+            <TextView  
+                android:id="@+id/user_name_error"  
+                android:layout_width="fill_parent"  
+                android:layout_height="fill_parent"  
+                android:layout_marginLeft="68.0dip"  
+                android:text="用户名为4-20个字符"  
+                android:textColor="#ffff0000"  
+                android:textSize="13.0dip"  
+                android:visibility="gone" />  
+  
+            <LinearLayout  
+                android:layout_width="fill_parent"  
+                android:layout_height="wrap_content"  
+                android:layout_marginTop="10.0dip"  
+                android:orientation="horizontal" >  
+  
+                <TextView  
+                    android:layout_width="65.0dip"  
+                    android:layout_height="wrap_content"  
+                    android:layout_gravity="center"  
+                    android:layout_marginRight="5.0dip"  
+                    android:text="@string/login_pass"  
+                    android:textColor="#ff404040"  
+                    android:textSize="16.0dip" />  
+  
+                <RelativeLayout  
+                    android:layout_width="wrap_content"  
+                    android:layout_height="40.0dip" >  
+  
+                    <EditText  
+                        android:id="@+id/password_edit"  
+                        android:layout_width="fill_parent"  
+                        android:layout_height="fill_parent"  
+                        android:hint="请输入密码"  
+                        android:imeOptions="actionNext"  
+                        android:inputType="textPassword"  
+                        android:maxLength="16"  
+                        android:paddingLeft="10.0dip"  
+                        android:singleLine="true"  
+                        android:textSize="16.0dip" />    
+                </RelativeLayout>  
+            </LinearLayout>  
+  
+            <TextView  
+                android:id="@+id/password_error"  
+                android:layout_width="fill_parent"  
+                android:layout_height="fill_parent"  
+                android:layout_marginLeft="68.0dip"  
+                android:text="密码至少为6位数"  
+                android:textColor="#ffff0000"  
+                android:textSize="13.0dip"  
+                android:visibility="gone" />  
+  
+            <LinearLayout  
+                android:layout_width="fill_parent"  
+                android:layout_height="wrap_content"  
+                android:layout_marginTop="10.0dip"  
+                android:orientation="horizontal" >  
+  
+                <TextView  
+                    android:layout_width="65.0dip"  
+                    android:layout_height="wrap_content"  
+                    android:layout_gravity="center"  
+                    android:layout_marginRight="5.0dip"  
+                    android:text="确认密码"  
+                    android:textColor="#ff404040"  
+                    android:textSize="16.0dip" />  
+  
+                <RelativeLayout  
+                    android:layout_width="wrap_content"  
+                    android:layout_height="40.0dip" >  
+  
+                    <EditText  
+                        android:id="@+id/confirm_password_edit"  
+                        android:layout_width="fill_parent"  
+                        android:layout_height="fill_parent"  
+  
+                        android:hint="请再次输入密码"  
+                        android:imeOptions="actionNext"  
+                        android:inputType="textPassword"  
+                        android:maxLength="16"  
+                        android:paddingLeft="10.0dip"  
+                        android:singleLine="true"  
+                        android:textSize="16.0dip" />  
+  
+                </RelativeLayout>  
+            </LinearLayout>  
+  
+            <TextView  
+                android:id="@+id/confirm_password_error"  
+                android:layout_width="fill_parent"  
+                android:layout_height="fill_parent"  
+                android:layout_marginLeft="68.0dip"  
+                android:text="您两次输入的密码不一样，请再次输入"  
+                android:textColor="#ffff0000"  
+                android:textSize="13.0dip"  
+                android:visibility="gone" />  
+
+            <Button  
+                android:id="@+id/register_button"  
+                android:layout_width="200.0dip"  
+                android:layout_height="45.0dip"  
+                android:layout_gravity="center_horizontal"  
+                android:layout_marginTop="15dip"    
+                android:text="立即注册"    
+                android:textSize="16.0dip" />  
+        </LinearLayout>  
+    </ScrollView>  
+  
+</LinearLayout> 

@@ -96,7 +96,7 @@
 	     <LinearLayout
 	         android:layout_width="wrap_content"
 	         android:layout_height="wrap_content"
-	         android:orientation="horizontal" >
+	         android:orientation="horizontal">
 
          <TextView
 		        android:layout_width="90dp"
@@ -118,21 +118,29 @@
 	            android:textSize="22sp" />
 	        
 	    </LinearLayout>
-	     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+	    
+	   <ImageView   
+        android:layout_width="fill_parent"  
+        android:layout_height="2dp"  
+        android:background="#000000"  
+        />  
+	     
+	    <TextView
+	        android:id="@+id/hostaddr"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text=""
+	        android:textSize="20sp"
+	        android:textStyle="bold" 
+	        android:singleLine="true" />
 
-		    <TextView
-		        android:layout_width="192dp"
-		        android:layout_height="wrap_content"
-		        android:text="255.255.255.255"
-		        android:textSize="24sp"
-		        android:textStyle="bold" />
-
-		    <Button
-		        android:id="@+id/refreshhostbtn"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:text="@string/refreship" />
-	    </LinearLayout>
+	    <Button
+	        android:id="@+id/refreshhostbtn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="24sp"
+	        android:text="@string/refreship" />
+	    
     </LinearLayout>
 
 </RelativeLayout>

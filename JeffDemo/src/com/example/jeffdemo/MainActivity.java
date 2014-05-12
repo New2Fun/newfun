@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        AmapActivity._lbsdemo = new AmapLbsDemo(this);
          
         SimpleAdapter adapter = new SimpleAdapter(this, getData(), R.layout.mainlist,
 				new String[]{"title","info","img"},

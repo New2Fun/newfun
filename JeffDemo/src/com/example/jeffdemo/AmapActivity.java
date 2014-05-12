@@ -20,7 +20,7 @@ public class AmapActivity extends Activity implements SensorEventListener {
 	SensorManager sensorManager = null;  
     Vibrator vibrator = null;
     
-    public static AmapLbsDemo _lbsdemo = null;
+    public AmapLbsDemo _lbsdemo = null;
     
     int _successcnt = 0;
     
@@ -33,6 +33,8 @@ public class AmapActivity extends Activity implements SensorEventListener {
 		setContentView(R.layout.activity_amap);
 		
 		ViewUtils.inject(this);		
+		
+		_lbsdemo = new AmapLbsDemo(this);
 		
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);  
         vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
@@ -55,6 +57,7 @@ public class AmapActivity extends Activity implements SensorEventListener {
         super.onPause();  
         sensorManager.unregisterListener(this); 
         _successcnt = 0;
+        _lbsdemo.stopLocation();
     }  
   
     @Override  

@@ -19,5 +19,6 @@
     <string name="editformal">请输入正式ip!</string>
     <string name="refreship">刷新主机ip</string>
     <string name="shake">摇一摇开始定位</string>
+    <string name="say">按住请说话</string>
 
 </resources>

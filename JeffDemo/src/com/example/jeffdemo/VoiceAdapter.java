@@ -1,10 +1,17 @@
 package com.example.jeffdemo;
 
+import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 //import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
@@ -14,10 +21,17 @@ public class VoiceAdapter extends BaseAdapter {
 
 	private List<VoiceEntity> _voicelist = null;
 	private LayoutInflater _inflater = null;
-	
+	private AnimationDrawable _anim = null; 
+	private Context _ctxt;
+	private TextView _textview = null;
+	private MediaPlayer mp = null;
+		
 	public VoiceAdapter(Context context, List<VoiceEntity> coll){
 		_voicelist = coll;
 		_inflater = LayoutInflater.from(context);
+		_ctxt = context;
+		
+		
 	}
 	
 	@Override
@@ -57,13 +71,12 @@ public class VoiceAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		final VoiceEntity entity = _voicelist.get(position);
 
-		ViewHolder viewHolder = null;
+		ViewHolder viewHolder = new ViewHolder();
+		
 		if (convertView == null) {
 		    convertView = _inflater.inflate(
 						R.layout.voice_msg, null);
-
-			viewHolder = new ViewHolder();			
-
+		    
 			viewHolder.tvSendTime = (TextView) convertView
 			.findViewById(R.id.tv_sendtime);
 			//viewHolder.tvUserName = (TextView) convertView
@@ -80,22 +93,73 @@ public class VoiceAdapter extends BaseAdapter {
 
 		viewHolder.tvSendTime.setText(entity.getDate());
 		
-		viewHolder.tvContent.setText("         ");
-		viewHolder.tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
+		viewHolder.tvContent.setText("         ");		
+		viewHolder.tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.playanim, 0);
 		viewHolder.tvTime.setText(entity.getTime());
 		
-		/*viewHolder.tvContent.setOnClickListener(new OnClickListener() {
+		viewHolder.tvContent.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				if (entity.getText().contains(".amr")) {
-					playMusic(android.os.Environment.getExternalStorageDirectory()+"/"+entity.getText()) ;
+				StopAnim();
+				if(_textview != v) {
+				    StartAnim(v);
+				    StartPlayer();
+				}
+				else
+				{
+					_textview = null;
 				}
 			}
-		});*/
+		});
 		
 		//viewHolder.tvUserName.setText(entity.getName());
 		
 		return convertView;
+	}
+	
+	private void StopAnim() {
+		if(_anim != null)
+		{
+			_anim.stop();
+			if(_textview != null)
+			    _textview.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.playanim, 0);
+			_anim = null;
+		}
+	}
+	
+	private void StartAnim(View v) {
+		TextView tmp = (TextView)v;		
+		_anim = (AnimationDrawable)VoiceAdapter.this._ctxt.getResources().getDrawable(R.drawable.playanim);
+		_textview = tmp; 
+		tmp.setCompoundDrawablesWithIntrinsicBounds(null, null, _anim, null);
+		_anim.start();
+        Log.e("VoiceAdapter", "播放动画");
+	}
+	
+	private void StartPlayer()
+	{
+		 try {
+			 mp = new MediaPlayer();
+             mp.setDataSource(android.os.Environment.getExternalStorageDirectory()+ "/test");
+             mp.prepare();
+             mp.start();
+          } catch (IllegalArgumentException e) {
+             e.printStackTrace();
+          } catch (IllegalStateException e) {
+             e.printStackTrace();
+          } catch (IOException e) {
+             e.printStackTrace();
+          }
+          
+          mp.setOnCompletionListener(new OnCompletionListener(){
+             @Override
+             public void onCompletion(MediaPlayer mp) {
+                 mp.release();
+                 StopAnim();
+                 mp = null;
+             }
+          });
+	    
 	}
 
 }

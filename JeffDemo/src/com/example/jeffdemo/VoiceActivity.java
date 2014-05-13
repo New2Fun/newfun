@@ -1,5 +1,6 @@
 package com.example.jeffdemo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -8,10 +9,12 @@ import java.util.Map;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -118,6 +121,11 @@ public class VoiceActivity extends Activity {
 				+ mins);
 
 		return sbBuffer.toString();
+	}
+	
+	@OnClick({ R.id.saybtn })
+	public void clickTestBtn(View v) {
+		
 	}
 
 }

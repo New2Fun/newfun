@@ -111,6 +111,8 @@ public class VoiceActivity extends Activity {
 						+ SystemClock.currentThreadTimeMillis() + ".amr");
 				
 				_rcdhint.setVisibility(View.VISIBLE);
+				
+				_handler.postDelayed(mPollTask, POLL_INTERVAL);
 			}
 		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 			if (_screenheight * 0.8 <= event.getRawY()) {
@@ -162,6 +164,8 @@ public class VoiceActivity extends Activity {
 			
 			_rcdcancel.setVisibility(View.GONE);
 			_rcdhint.setVisibility(View.GONE);
+			
+			_handler.removeCallbacks(mPollTask);
 		}
 
 		return true;
@@ -207,7 +211,6 @@ public class VoiceActivity extends Activity {
 			double amp = _amrrecoder.getAmplitude();
 			updateDisplay(amp);
 			_handler.postDelayed(mPollTask, POLL_INTERVAL);
-
 		}
 	};
 

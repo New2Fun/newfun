@@ -7,14 +7,14 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context=".VoiceActivity" >
-    
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom = "50.5dp"
+        android:layout_marginBottom="50.5dp"
         android:background="#e0e0e0" >
 
         <ListView
@@ -22,17 +22,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" 
+            android:layout_alignParentTop="true"
             android:cacheColorHint="#0000"
             android:divider="@null"
             android:dividerHeight="5dp"
             android:scrollbarStyle="outsideOverlay"
             android:stackFromBottom="true" >
-
         </ListView>
 
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="168dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/voice_rcd_hint_bg"
+            android:visibility="gone" >
+            
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/voice_rcd_hint"
+                />
+            
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/amp7"
+                />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id = "@+id/rcdhint"
+            android:layout_width="160dp"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/voice_rcd_hint_bg"
+            android:visibility="gone" >
+            
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/voice_rcd_hint"
+                />
+            
+            <ImageView 
+                android:id="@+id/ampbkg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/amp1"
+                />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id = "@+id/rcdcancel"
+            android:layout_width="160dp"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/voice_rcd_hint_bg"
+            android:visibility="gone" >
+            
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rcd_cancel_icon"
+                />
+            
+        </LinearLayout>
     </RelativeLayout>
-    
+
     <ImageView
         android:id="@+id/imgsplit"
         android:layout_width="fill_parent"
@@ -59,7 +115,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
             android:text="@string/say" />
-
     </RelativeLayout>
 
 </RelativeLayout>

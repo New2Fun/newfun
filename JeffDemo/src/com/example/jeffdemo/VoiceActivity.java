@@ -1,103 +1,72 @@
 package com.example.jeffdemo;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.lidroid.xutils.view.annotation.event.OnTouch;
 
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class VoiceActivity extends Activity {
 
 	@ViewInject(R.id.voicelist)
 	ListView _voicelist;
+
+	@ViewInject(R.id.saybtn)
+	Button _saybtn;
 	
+	@ViewInject(R.id.rcdcancel)
+	LinearLayout _rcdcancel;
+	
+	@ViewInject(R.id.rcdhint)
+	LinearLayout _rcdhint;
+	
+	@ViewInject(R.id.ampbkg)
+	ImageView _ampbkg;
+
 	VoiceAdapter _adapter = null;
 
 	private List<VoiceEntity> _dataarrays = new ArrayList<VoiceEntity>();
-	
-	private String[] msgArray = new String[] { "有人就有恩怨","有恩怨就有江湖","人就是江湖","你怎么退出？ ","生命中充满了巧合","两条平行线也会有相交的一天。"};
 
-	private String[] dataArray = new String[] { "2012-10-31 18:00",
-			"2012-10-31 18:10", "2012-10-31 18:11", "2012-10-31 18:20",
-			"2012-10-31 18:30", "2012-10-31 18:35"};
-	private final static int COUNT = 6;
-	
-	/*private List<? extends Map<String, ?>> getData() {
-		// TODO Auto-generated method stub
-    	List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	private int _screenwidth = 0;
+	private int _screenheight = 0;
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "IP切换");
-		map.put("info", "通过域名切换IP");
-		map.put("img", R.drawable.host);
-		list.add(map);
+	private AmrRecoder _amrrecoder = null;
+	private Handler _handler = new Handler();
 
-		map = new HashMap<String, Object>();
-		map.put("title", "定位");
-		map.put("info", "使用高德SDK实现LBS功能");
-		map.put("img", R.drawable.place);
-		list.add(map);
-
-		map = new HashMap<String, Object>();
-		map.put("title", "语音");
-		map.put("info", "录音、播放功能");
-		map.put("img", R.drawable.voice);
-		list.add(map);
-		
-		map = new HashMap<String, Object>();
-		map.put("title", "图片");
-		map.put("info", "照相、图片选择以及图片剪切");
-		map.put("img", R.drawable.camera);
-		list.add(map);
-		
-		map = new HashMap<String, Object>();
-		map.put("title", "微信分享");
-		map.put("info", "通过微信SDK实现分享");
-		map.put("img", R.drawable.share);
-		list.add(map);
-    	
-		return list;
-	}*/
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_voice);
-		
-		ViewUtils.inject(this);
-		
-		for (int i = 0; i < COUNT; i++) {
-			VoiceEntity entity = new VoiceEntity();
-			entity.setDate(dataArray[i]);
-			if (i % 2 == 0) {
-				entity.setName("白富美");
-			} else {
-				entity.setName("高富帅");
-			}
 
-			entity.setText(msgArray[i]);
-			_dataarrays.add(entity);
-		}
-	
+		ViewUtils.inject(this);
+
+		_screenwidth = getWindowManager().getDefaultDisplay().getWidth();
+		_screenheight = getWindowManager().getDefaultDisplay().getHeight();
+
 		_adapter = new VoiceAdapter(this, _dataarrays);
-		
-		//SimpleAdapter adapter = new SimpleAdapter(this, getData(), R.layout.mainlist,
-		//		new String[]{"title","info","img"},
-		//		new int[]{R.id.listtitle,R.id.listinfo,R.id.listimg});
-		
+
 		_voicelist.setAdapter(_adapter);
+		
+		_rcdcancel.setVisibility(View.GONE);
+		_rcdhint.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -106,7 +75,7 @@ public class VoiceActivity extends Activity {
 		getMenuInflater().inflate(R.menu.voice, menu);
 		return true;
 	}
-	
+
 	private String getDate() {
 		Calendar c = Calendar.getInstance();
 
@@ -122,10 +91,124 @@ public class VoiceActivity extends Activity {
 
 		return sbBuffer.toString();
 	}
-	
-	@OnClick({ R.id.saybtn })
-	public void clickTestBtn(View v) {
-		
+
+	@OnTouch({ R.id.saybtn })
+	public boolean TouchSayBtn(View v, MotionEvent event) {
+
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			if (_screenheight * 0.8 <= event.getRawY()) {
+				if (!Environment.getExternalStorageDirectory().exists()) {
+					Toast.makeText(this, "No SDCard", Toast.LENGTH_LONG).show();
+					return false;
+				}
+				// Log.i("VoiceActivity", "松开 结束");
+
+				_amrrecoder = new AmrRecoder();
+
+				_amrrecoder.startRecoder(Environment
+						.getExternalStorageDirectory()
+						+ "/"
+						+ SystemClock.currentThreadTimeMillis() + ".amr");
+				
+				_rcdhint.setVisibility(View.VISIBLE);
+			}
+		} else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			if (_screenheight * 0.8 <= event.getRawY()) {
+				_saybtn.setText("松开 结束");
+				_rcdcancel.setVisibility(View.GONE);
+				_rcdhint.setVisibility(View.VISIBLE);
+			} else {
+				_saybtn.setText("松开手指   取消发送");
+				_rcdcancel.setVisibility(View.VISIBLE);
+				_rcdhint.setVisibility(View.GONE);
+			}
+		} else if (event.getAction() == MotionEvent.ACTION_UP) {
+			_saybtn.setText(R.string.say);
+			
+			if (_screenheight * 0.8 <= event.getRawY()) {
+				// Log.i("VoiceActivity", "松开 结束");
+				
+				if (_amrrecoder != null) {	
+					String filepath = _amrrecoder.getFilePath();
+					long duration = _amrrecoder.stopRecoder();
+					Log.i("VoiceActivity", "录音时间:" + duration);
+					VoiceEntity entity = new VoiceEntity();
+					entity.setDate(getDate());
+					entity.setTime(duration + "\"");
+					entity.setText(filepath);	
+					_dataarrays.add(entity);
+					_adapter.notifyDataSetChanged();
+					_voicelist.setSelection(_voicelist.getCount() - 1);
+					
+					_amrrecoder = null;
+				}
+				
+			} else {
+				// Log.i("VoiceActivity", "松开手指   取消发送");
+				
+				if (_amrrecoder != null) {
+					
+					File file = new File(_amrrecoder.getFilePath());
+					if (file.exists()) {
+						file.delete();
+					}
+					
+					_amrrecoder.stopRecoder();
+					
+					_amrrecoder = null;
+				}
+
+			}
+			
+			_rcdcancel.setVisibility(View.GONE);
+			_rcdhint.setVisibility(View.GONE);
+		}
+
+		return true;
 	}
+	
+	private static final int POLL_INTERVAL = 300;
+	
+    private void updateDisplay(double signalEMA) {
+		
+		switch ((int) signalEMA) {
+		case 0:
+		case 1:
+			_ampbkg.setBackgroundResource(R.drawable.amp1);
+			break;
+		case 2:
+		case 3:
+			_ampbkg.setBackgroundResource(R.drawable.amp2);			
+			break;
+		case 4:
+		case 5:
+			_ampbkg.setBackgroundResource(R.drawable.amp3);
+			break;
+		case 6:
+		case 7:
+			_ampbkg.setBackgroundResource(R.drawable.amp4);
+			break;
+		case 8:
+		case 9:
+			_ampbkg.setBackgroundResource(R.drawable.amp5);
+			break;
+		case 10:
+		case 11:
+			_ampbkg.setBackgroundResource(R.drawable.amp6);
+			break;
+		default:
+			_ampbkg.setBackgroundResource(R.drawable.amp7);
+			break;
+		}
+	}
+	
+	private Runnable mPollTask = new Runnable() {
+		public void run() {
+			double amp = _amrrecoder.getAmplitude();
+			updateDisplay(amp);
+			_handler.postDelayed(mPollTask, POLL_INTERVAL);
+
+		}
+	};
 
 }

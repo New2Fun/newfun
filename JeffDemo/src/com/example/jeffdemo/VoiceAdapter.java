@@ -1,19 +1,16 @@
 package com.example.jeffdemo;
 
-import java.io.IOException;
 import java.util.List;
+
+import com.example.jeffdemo.FilePlayer.FinishPlayer;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-//import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -24,14 +21,14 @@ public class VoiceAdapter extends BaseAdapter {
 	private AnimationDrawable _anim = null; 
 	private Context _ctxt;
 	private TextView _textview = null;
-	private MediaPlayer mp = null;
+	private FilePlayer _fileplayer = null;
+	private PlayerVolume _pvolume = null;
 		
 	public VoiceAdapter(Context context, List<VoiceEntity> coll){
 		_voicelist = coll;
 		_inflater = LayoutInflater.from(context);
 		_ctxt = context;
-		
-		
+		_pvolume = new PlayerVolume(context);
 	}
 	
 	@Override
@@ -79,8 +76,6 @@ public class VoiceAdapter extends BaseAdapter {
 		    
 			viewHolder.tvSendTime = (TextView) convertView
 			.findViewById(R.id.tv_sendtime);
-			//viewHolder.tvUserName = (TextView) convertView
-			//.findViewById(R.id.tv_username);
 	        viewHolder.tvContent = (TextView) convertView
 			.findViewById(R.id.tv_chatcontent);
 	        viewHolder.tvTime = (TextView) convertView
@@ -94,25 +89,34 @@ public class VoiceAdapter extends BaseAdapter {
 		viewHolder.tvSendTime.setText(entity.getDate());
 		
 		viewHolder.tvContent.setText("         ");		
-		viewHolder.tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.playanim, 0);
+		viewHolder.tvContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing_f3, 0);
 		viewHolder.tvTime.setText(entity.getTime());
 		
 		viewHolder.tvContent.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				StopAnim();
-				if(_textview != v) {
-				    StartAnim(v);
-				    StartPlayer();
-				}
-				else
+				boolean bstart = true;
+				if(_textview == v) bstart = false;
+				if(_fileplayer != null)
 				{
-					_textview = null;
+					_fileplayer.stopPlayer();
+				}
+				if(bstart) {
+					_fileplayer = new FilePlayer(entity.getText(),
+							new FinishPlayer() {						
+								@Override
+								public void onCompletion() {
+									// TODO Auto-generated method stub
+									_pvolume.ResumeVolume();
+									StopAnim();
+								}						
+					});
+					StartAnim(v);
+					_pvolume.MaxVolume();
+					_fileplayer.startPlayer();
 				}
 			}
 		});
-		
-		//viewHolder.tvUserName.setText(entity.getName());
 		
 		return convertView;
 	}
@@ -120,11 +124,12 @@ public class VoiceAdapter extends BaseAdapter {
 	private void StopAnim() {
 		if(_anim != null)
 		{
-			_anim.stop();
+			_anim.stop();			
 			if(_textview != null)
-			    _textview.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.playanim, 0);
+			    _textview.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing_f3, 0);
+			_textview = null;
 			_anim = null;
-		}
+		}		
 	}
 	
 	private void StartAnim(View v) {
@@ -134,32 +139,6 @@ public class VoiceAdapter extends BaseAdapter {
 		tmp.setCompoundDrawablesWithIntrinsicBounds(null, null, _anim, null);
 		_anim.start();
         Log.e("VoiceAdapter", "播放动画");
-	}
-	
-	private void StartPlayer()
-	{
-		 try {
-			 mp = new MediaPlayer();
-             mp.setDataSource(android.os.Environment.getExternalStorageDirectory()+ "/test");
-             mp.prepare();
-             mp.start();
-          } catch (IllegalArgumentException e) {
-             e.printStackTrace();
-          } catch (IllegalStateException e) {
-             e.printStackTrace();
-          } catch (IOException e) {
-             e.printStackTrace();
-          }
-          
-          mp.setOnCompletionListener(new OnCompletionListener(){
-             @Override
-             public void onCompletion(MediaPlayer mp) {
-                 mp.release();
-                 StopAnim();
-                 mp = null;
-             }
-          });
-	    
 	}
 
 }

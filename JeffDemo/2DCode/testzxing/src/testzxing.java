@@ -1,20 +1,12 @@
-import java.util.*;
-
-
-import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
 import org.zxing.util.ZXingUtil;
 
-public class testzxing {
-
-	private static void help()
-	{
-		System.out.print("Example:java -jar 2dcode.jar -o result.png -u http://www.baidu.com -l logo.png\n");
-	}
-	
+public class testzxing {	
 	
 	/**
 	 * @param args
@@ -25,7 +17,7 @@ public class testzxing {
 		// create Options object
 		
 		// create the command line parser
-		CommandLineParser parser = new BasicParser();
+		CommandLineParser parser = new PosixParser();
 				
 		String dest = "";
 		String url = "";
@@ -37,19 +29,19 @@ public class testzxing {
 		options.addOption( OptionBuilder.withLongOpt( "u" )
                 .withDescription( "Url Address" )
                 .hasArg()
-                .withArgName("http://")
+                .withArgName("http://www.baidu.com")
                 .create());
 		
 		options.addOption( OptionBuilder.withLongOpt( "o" )
-                .withDescription( "Output File's Path" )
+                .withDescription( "Output File's Path [optional]" )
                 .hasArg()
                 .withArgName("result.png")
                 .create());
 		
 		options.addOption( OptionBuilder.withLongOpt( "l" )
-                .withDescription( "Logo's Path" )
+                .withDescription( "Logo's Path [optional]" )
                 .hasArg()
-                .withArgName("logo.png")
+               .withArgName("logo.png")
                 .create());
 		
 		try {
@@ -57,21 +49,25 @@ public class testzxing {
 			// parse the command line arguments
 		    CommandLine line = parser.parse( options, args );
 			
-			if(!line.hasOption( "u" ) || !line.hasOption( "o" )) {
+			if(!line.hasOption( "u" )) {
 		        // print the value of block-size
-				help();
+				HelpFormatter formatter = new HelpFormatter();  
+				formatter.printHelp( "2dcode -u url [-o result.png] [-l logo.png]", options ); 
 				System.exit(1);
 		    }
 			
-			dest = line.getOptionValue("o");
+			dest = line.getOptionValue("o", "./result.png");
 			url = line.getOptionValue("u");
 			logo = line.getOptionValue("l", "");
 			
 			ZXingUtil.encodeQRCodeImage(url, null, dest, 300,
 						300, logo);
+			
+			System.out.print("Output File["+ dest +"] is Successed.");
 
 		} catch (Exception e) {
-			help();
+			HelpFormatter formatter = new HelpFormatter();  
+			formatter.printHelp( "2dcode -u url [-o result.png] [-l logo.png]", options ); 
 			e.printStackTrace();
 		}
 	}

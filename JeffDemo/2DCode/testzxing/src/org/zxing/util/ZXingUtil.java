@@ -102,7 +102,7 @@ public class ZXingUtil {
         try {  
             MatrixToImageWriter.writeToFile(bitMatrix, imagePath.substring(imagePath.lastIndexOf(".") + 1), new File(imagePath), config);  
         } catch (IOException e) {  
-            System.out.println("生成二维码图片[" + imagePath + "]时遇到异常,堆栈轨迹如下");  
+            System.out.println("Output File[" + imagePath + "] throw exception. Stack Trace:");  
             e.printStackTrace();  
             return false;  
         }  
@@ -119,7 +119,7 @@ public class ZXingUtil {
                 overlapImage(imagePath, logoPath);  
                 return true;  
             } catch (IOException e) {  
-                System.out.println("为二维码图片[" + imagePath + "]添加logo头像[" + logoPath + "]时遇到异常,堆栈轨迹如下");  
+                System.out.println("Add logo[" + logoPath + "] throw exception. Stack Trace:");  
                 e.printStackTrace();  
                 return false;  
             }  
